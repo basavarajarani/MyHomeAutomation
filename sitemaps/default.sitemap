@@ -1,0 +1,16 @@
+sitemap default label="Main Menu"
+{
+	Frame label="Temperatures" {
+		Group item=Temperatures
+		Group item=MelbourneWeather
+	}
+
+	Frame label="Relay Board" {
+		Switch item=Relay1_Switch2
+		Switch item=Relay1_Switch1
+	}
+
+	Frame label="Geo" {
+		Group item=Geo
+	}
+}

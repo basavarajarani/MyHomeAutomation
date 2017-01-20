@@ -1,0 +1,4 @@
+exec:command:temp [command="python /home/pi/sources/termo.py", interval=1, timeout=5]
+
+yahooweather:weather:melbourne [location=1103816]
+
