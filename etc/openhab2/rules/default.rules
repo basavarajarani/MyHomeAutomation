@@ -1,0 +1,11 @@
+
+
+rule ScheduleIrrigationControllers
+when
+	Time cron "0 01 * * * ?"
+then
+
+	var float Today_High_Temp = Float.valueOf(Melbourne_Weather_High_In_Celcius.state.toString).floatValue()
+	
+	logDebug("Demo","Today's High Temperature:"+Today_High_Temp)
+end

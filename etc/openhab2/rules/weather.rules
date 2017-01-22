@@ -1,0 +1,47 @@
+var String prevTemp = "Hello"
+var int counter = 0
+var String studyRoomTemp 
+
+var wuKey = "8ac6c3f2b12d16cc"
+
+/*
+ * Rule Name: UpdateMelbourneDailyWeatherAT6AM
+ * Executed: Once a day - 6am
+ * Description: Retrieves the High/Low temperatures and Today's Rain
+ * 				and persists them.
+ */
+
+rule UpdateMelbourneDailyWeatherAT6AM
+when
+	Time cron "0 50 5 * * ?"
+then
+	var String wuFeature="forecast"
+
+	var String wuTodaysWeatherForecastJson = sendHttpGetRequest("http://api.wunderground.com/api/"+wuKey+"/"+wuFeature+"/q/Australia/Melbourne.json")
+	//logDebug("Demo","WUJson:"+wuTodaysWeatherJson)
+	
+	var float melb_high_c	= Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].high.celsius",wuTodaysWeatherForecastJson))
+	var float melb_low_c    = Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].low.celsius",wuTodaysWeatherForecastJson))
+	var float melb_rain_mm  = Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].qpf_allday.mm",wuTodaysWeatherForecastJson))
+	
+    Melbourne_Weather_High_In_Celcius.postUpdate(melb_high_c)
+    Melbourne_Weather_Low_In_Celcius.postUpdate(melb_low_c)
+    Melbourne_Weather_Rain_In_MM.postUpdate(melb_rain_mm)	
+end
+
+/*
+ * Rule Name: UpdateMelbourneCurrentTemp
+ * Executed : Every Hour
+ * Description: Reads the WU Current Temperature and Stores it in Melbourne_Weather_Current_Temp_In_Celcius
+ */
+rule UpdateMelbourneCurrentTemp
+when 
+	Time cron "0 0 */1 * * ?"
+then
+	var String wuFeature="conditions"
+	var String wuWeatherConditionJson = sendHttpGetRequest("http://api.wunderground.com/api/"+wuKey+"/"+wuFeature+"/q/Australia/Melbourne.json")
+	var float currentTempInCelcius = Float.valueOf(transform("JSONPATH","$.current_observation.temp_c",wuWeatherConditionJson))
+	
+	Melbourne_Weather_Current_Temp_In_Celcius.postUpdate(currentTempInCelcius)
+end
+
