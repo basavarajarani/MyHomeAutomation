@@ -1,6 +1,7 @@
-Number	Melbourne_Weather_Low_In_Celcius
-Number	Melbourne_Weather_High_In_Celcius
-Number	Melbourne_Weather_Rain_In_MM
-Number  Melbourne_Weather_POP
+Group Weather
+Number	Melbourne_Weather_Low_In_Celcius "Low [%.2f]" <temperature> (Weather)
+Number	Melbourne_Weather_High_In_Celcius "High [%.2f]"  <temperature> (Weather)
+Number	Melbourne_Weather_Rain_In_MM "Rain [%.2f]" <rain> (Weather)
+Number  Melbourne_Weather_POP "Percentage of Rain[%d]" <rain> (Weather)
 
-Number  Melbourne_Weather_Current_Temp_In_Celcius
+Number  Melbourne_Weather_Current_Temp_In_Celcius "Current Temperature [%.2f]" <temperature> (Weather)

@@ -1,8 +1,61 @@
-var String prevTemp = "Hello"
-var int counter = 0
-var String studyRoomTemp 
+import org.eclipse.smarthome.core.library.types.DecimalType
 
 var wuKey = "8ac6c3f2b12d16cc"
+var Timer VeggiePatchTimer = null
+
+/**
+ * Procedure to retrieve the WeatherForecast
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure1 <String> retrieveWeatherForecast = [ 
+	String apiKey|
+	
+	logDebug("HomeAutomation","Invoking retrieveWeatherForecast");
+
+	var String wuFeature="forecast"
+
+	var String wuTodaysWeatherForecastJson = sendHttpGetRequest("http://api.wunderground.com/api/"+apiKey+"/"+wuFeature+"/q/Australia/Melbourne.json")
+	
+	var float melb_high_c	= Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].high.celsius",wuTodaysWeatherForecastJson))
+	var float melb_low_c    = Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].low.celsius",wuTodaysWeatherForecastJson))
+	var float melb_rain_mm  = Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].qpf_allday.mm",wuTodaysWeatherForecastJson))
+	var float melb_rain_pop = Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].pop",wuTodaysWeatherForecastJson))
+	Melbourne_Weather_High_In_Celcius.postUpdate(melb_high_c)
+    Melbourne_Weather_Low_In_Celcius.postUpdate(melb_low_c)
+    Melbourne_Weather_Rain_In_MM.postUpdate(melb_rain_mm)	
+    Melbourne_Weather_POP.postUpdate(melb_rain_pop)
+]
+
+/*
+ * Procedure to retrieve the WeatherConditions
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure1 <String> retrieveWeatherConditions = [
+	String apiKey |
+	
+	logDebug("HomeAutomation","Invoking retrieveWeatherConditions");
+	
+	var String wuFeature="conditions"
+	var String wuWeatherConditionJson = sendHttpGetRequest("http://api.wunderground.com/api/"+apiKey+"/"+wuFeature+"/q/Australia/Melbourne.json")
+	var float currentTempInCelcius = Float.valueOf(transform("JSONPATH","$.current_observation.temp_c",wuWeatherConditionJson))
+	
+	Melbourne_Weather_Current_Temp_In_Celcius.postUpdate(currentTempInCelcius)	
+]
+
+/*
+ * Rule Name: SystemStarted
+ * Executed: When the openhab2 starts
+ * Description:
+ * 			1. Reads the weather from the underground
+ * 			2. Reads the High,Low, Current Temperatures
+ * 			3. Reads the Rain in % and mm
+ */
+rule SystemStarted
+when
+	System started
+then
+	retrieveWeatherForecast.apply(wuKey)
+	retrieveWeatherConditions.apply(wuKey)
+
+end
 
 /*
  * Rule Name: UpdateMelbourneDailyWeatherAT6AM
@@ -15,18 +68,7 @@ rule UpdateMelbourneDailyWeatherAT6AM
 when
 	Time cron "0 50 5 * * ?"
 then
-	var String wuFeature="forecast"
-
-	var String wuTodaysWeatherForecastJson = sendHttpGetRequest("http://api.wunderground.com/api/"+wuKey+"/"+wuFeature+"/q/Australia/Melbourne.json")
-	//logDebug("Demo","WUJson:"+wuTodaysWeatherJson)
-	
-	var float melb_high_c	= Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].high.celsius",wuTodaysWeatherForecastJson))
-	var float melb_low_c    = Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].low.celsius",wuTodaysWeatherForecastJson))
-	var float melb_rain_mm  = Float.valueOf(transform("JSONPATH","$.forecast.simpleforecast.forecastday[0].qpf_allday.mm",wuTodaysWeatherForecastJson))
-	
-    Melbourne_Weather_High_In_Celcius.postUpdate(melb_high_c)
-    Melbourne_Weather_Low_In_Celcius.postUpdate(melb_low_c)
-    Melbourne_Weather_Rain_In_MM.postUpdate(melb_rain_mm)	
+	retrieveWeatherForecast.apply(wuKey)
 end
 
 /*
@@ -36,12 +78,42 @@ end
  */
 rule UpdateMelbourneCurrentTemp
 when 
-	Time cron "0 0 */1 * * ?"
+	Time cron "0 0 0/1 * * ?"
 then
-	var String wuFeature="conditions"
-	var String wuWeatherConditionJson = sendHttpGetRequest("http://api.wunderground.com/api/"+wuKey+"/"+wuFeature+"/q/Australia/Melbourne.json")
-	var float currentTempInCelcius = Float.valueOf(transform("JSONPATH","$.current_observation.temp_c",wuWeatherConditionJson))
+	retrieveWeatherConditions.apply(wuKey)
+end
+
+rule ScheduleFrontGardenPotsWatering
+when
+	Time cron "0/30 * * * * ?"
+then
+	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
+	var Number Low_Temp = Melbourne_Weather_Low_In_Celcius.state as DecimalType
+	 
+
 	
-	Melbourne_Weather_Current_Temp_In_Celcius.postUpdate(currentTempInCelcius)
+	if (High_Temp >= 35) {
+		sendCommand(Relay1_Switch1,ON)
+		//logDebug("HomeAutomation","Starting Timer");
+		VeggiePatchTimer = createTimer(now.plusSeconds(10),[| 
+										sendCommand(Relay1_Switch1,OFF)
+										//logDebug("HomeAutomation","Stopping Timer")
+							])
+	} else if (High_Temp >= 30) {
+		sendCommand(Relay1_Switch1,ON)
+		//logDebug("HomeAutomation","Starting Timer");
+		VeggiePatchTimer = createTimer(now.plusSeconds(5),[| 
+										sendCommand(Relay1_Switch1,OFF)
+										//logDebug("HomeAutomation","Stopping Timer")
+							])		
+	} else if (High_Temp >= 25) {
+		sendCommand(Relay1_Switch1,ON)
+		//logDebug("HomeAutomation","Starting Timer");
+		VeggiePatchTimer = createTimer(now.plusSeconds(2),[| 
+										sendCommand(Relay1_Switch1,OFF)
+										//logDebug("HomeAutomation","Stopping Timer")
+							])			
+	}	
 end
 

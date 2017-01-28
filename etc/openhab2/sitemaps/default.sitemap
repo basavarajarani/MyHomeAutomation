@@ -3,15 +3,18 @@ sitemap default label="Main Menu"
 	Frame label="Temperatures" {
 		Group item=Temperatures
 		Group item=MelbourneWeather
+		Group item=Weather
 	}
 
-	Frame label="Relay Board" {
+	Frame label="Switch Board" {
 		Switch item=Relay1_Switch2
 		Switch item=Relay1_Switch1
+
 	}
 
-	Frame label="Geo" {
-		Group item=Geo
+	Frame label="Veggie Patch" {
+		Switch item=VeggiePatchSwitch1
+		Switch item=VeggiePatchSwitch2
 	}
 	
 

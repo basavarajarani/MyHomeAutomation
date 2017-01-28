@@ -9,43 +9,13 @@ Group Geo
 
 String MyFirstSensor "Study Room [%s]" <temperature> (Temperatures) {channel="exec:command:temp:output"}
 String MySecondSensor "Previous Temperature [%s]" <temperature> (Temperatures)
-Number YahooWeatherMelbourne "Melbourne Weather" <temperature> (Temperatures){ channel="yahooweather:weather:melbourne:temperature" }
 
-Switch Relay1_Switch2 "Relay Switch 2" <switch> (Relays){ gpio="pin:4 activelow:yes force:yes"}
-Switch Relay1_Switch1 "Relay Switch 1" <switch> (Relays)
+//Switch Relay1_Switch2 "Relay Switch 2" <switch> (Relays){ gpio="pin:4 activelow:yes force:yes"}
+//Switch Relay1_Switch1 "Relay Switch 1" <switch> (Relays) { gpio="pin:13 activelow:yes force:yes"}
 
 
 String Relay1_Switch1_Command  "[%s]" {mqtt="<[mosquitto:testTopic:state:default]"} 
 
 String mqttPositionPatrikRaw "[%s]" (Geo) {mqtt="<[mosquitto:testGeo:state:default]"}
 
-String mqttOut {mqtt=">[mosquitto:testGeoOut:state:*:default]"}
-
-
-String Latitude "Latitude: [%s]" (Geo)
-String Longitude "Longitude: [%s]" (Geo)
-String Acc "Acc: [%s]" (Geo)
-String Batt "Batt:[%s]" (Geo)
-
-Group YahooWeather
-
-Group MelbourneWeather
-
-Number   MelbTemperature   "Temperature [%.2f °C]" (MelbourneWeather)  {weather="locationId=melbourne, type=temperature, property=current"}
-Number   MelbHumidity      "Humidity [%d %%]"      (MelbourneWeather)  {weather="locationId=melbourne, type=atmosphere, property=humidity"}
-Number   Rain          "Rain [%.2f mm/h]" (MelbourneWeather)  {weather="locationId=melbourne, type=precipitation, property=rain"}
-Number   Temp_Min         "Temperature min [%.2f °C]" (MelbourneWeather)  {weather="locationId=melbourne, type=temperature, property=min"}
-Number   Temp_Max         "Temperature max [%.2f °C]" (MelbourneWeather)  {weather="locationId=melbourne, type=temperature, property=max"}
-
-
-
-
-
-
-
-
-
-
-
-
-
+String mqttOut "ESP:"  {mqtt=">[mosquitto:testGeoOut:state:default]"}

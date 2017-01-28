@@ -1,0 +1,12 @@
+sitemap HomeAutomation label="Home Automation"
+{
+	Frame label="Weather" {
+		Group item=Weather label="Today's Weather Highlights" icon=sun_clouds
+	}
+	Frame label="Home Garden" {
+		Group item=NodeMCU1_Switches icon=wallswitch
+		Group item=NodeMCU1_SwitchOnTimings
+	}
+
+}
+
