@@ -1,7 +1,14 @@
-Group Weather
-Number	Melbourne_Weather_Low_In_Celcius "Low [%.2f]" <temperature> (Weather)
-Number	Melbourne_Weather_High_In_Celcius "High [%.2f]"  <temperature> (Weather)
-Number	Melbourne_Weather_Rain_In_MM "Rain [%.2f]" <rain> (Weather)
-Number  Melbourne_Weather_POP "Percentage of Rain[%d]" <rain> (Weather)
+Group Weather <sun_clouds>
 
-Number  Melbourne_Weather_Current_Temp_In_Celcius "Current Temperature [%.2f]" <temperature> (Weather)
+Group Temperature "Todays Temperature Highlights" <temperature> (Weather)
+Number	Melbourne_Weather_Low_In_Celcius "Low [%.2f]" <temperature> (Temperature)
+Number	Melbourne_Weather_High_In_Celcius "High [%.2f]"  <temperature> (Temperature)
+Number  Melbourne_Weather_Current_Temp_In_Celcius "Current Temperature [%.2f]" <temperature> (Temperature)
+
+Group Rain "12 Hour Rain History" <rain>  (Weather)
+Number	Melbourne_Weather_Rain_In_MM "Rain Today [%.2f]" <rain> (Rain)
+Number  Melbourne_Weather_POP "Percentage of Rain Today [%d]" <rain> (Rain)
+Number  Melbourne_Weather_Current_Rain_In_MM "Rain in 1 Hour [%d]" <rain> (Rain)
+Number  Melbourne_Weather_Rain_Last_12_Hours "Rain Last 12 Hours [%d]" <rain> (Rain) 
+Number  Melbourne_Weather_Max_Rain_Last_12_Hours "Maximum Rain in last 12 Hours [%d]" <rain> (Rain)
+Number  Melbourne_Weather_Min_Rain_Last_12_Hours "Minimum Rain in last 12 Hours [%d]" <rain> (Rain)

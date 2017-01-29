@@ -6,16 +6,18 @@ Group Temperatures "Temperature" <temperature> (All)
 Group Relays "Relay Switches" <switch> (All)
 
 Group Geo
-
+/*
 String MyFirstSensor "Study Room [%s]" <temperature> (Temperatures) {channel="exec:command:temp:output"}
 String MySecondSensor "Previous Temperature [%s]" <temperature> (Temperatures)
-
+ */
+ 
 //Switch Relay1_Switch2 "Relay Switch 2" <switch> (Relays){ gpio="pin:4 activelow:yes force:yes"}
 //Switch Relay1_Switch1 "Relay Switch 1" <switch> (Relays) { gpio="pin:13 activelow:yes force:yes"}
 
-
+/*
 String Relay1_Switch1_Command  "[%s]" {mqtt="<[mosquitto:testTopic:state:default]"} 
 
 String mqttPositionPatrikRaw "[%s]" (Geo) {mqtt="<[mosquitto:testGeo:state:default]"}
 
 String mqttOut "ESP:"  {mqtt=">[mosquitto:testGeoOut:state:default]"}
+ */

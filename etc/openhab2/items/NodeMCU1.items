@@ -1,4 +1,4 @@
-Group NodeMCU1 (HomeAutomation)
+Group NodeMCU1
 /*
 Switch Relay2_Switch1 "Veggie Patch Tap 1" <faucet> (Relay2) {mqtt=">[mosquitto:ESP8266-VeggiePatch-In:command:off:1=0],>[mosquitto:ESP8266-VeggiePatch-In:command:on:1=1]"}
 Switch Relay2_Switch2 "Veggie Patch Tap 2" <faucet> (Relay2) {mqtt=">[mosquitto:ESP8266-VeggiePatch-In:command:off:2=0],>[mosquitto:ESP8266-VeggiePatch-In:command:on:2=1]"}
@@ -7,14 +7,14 @@ Switch Relay2_Switch4 "Veggie Patch Tap 4" <faucet> (Relay2) {mqtt=">[mosquitto:
 
  */
  
-Group NodeMCU1_Switches "NodeMCU1 Switches"(NodeMCU1)
+Group NodeMCU1_Switches "Switches" <wallswitch> (NodeMCU1)
 Switch NodeMCU1_Switch1 "Veggie Patch Tap 1" <faucet> (NodeMCU1_Switches) {mqtt=">[mosquitto:NodeMCU1/In/Switches:command:off:1=0],>[mosquitto:NodeMCU1/In/Switches:command:on:1=1]"}
 Switch NodeMCU1_Switch2 "Veggie Patch Tap 2" <faucet> (NodeMCU1_Switches) {mqtt=">[mosquitto:NodeMCU1/In/Switches:command:off:2=0],>[mosquitto:NodeMCU1/In/Switches:command:on:2=1]"}
 Switch NodeMCU1_Switch3 "Veggie Patch Tap 3" <faucet> (NodeMCU1_Switches) {mqtt=">[mosquitto:NodeMCU1/In/Switches:command:off:3=0],>[mosquitto:NodeMCU1/In/Switches:command:on:3=1]"}
 Switch NodeMCU1_Switch4 "Veggie Patch Tap 4" <faucet> (NodeMCU1_Switches) {mqtt=">[mosquitto:NodeMCU1/In/Switches:command:off:4=0],>[mosquitto:NodeMCU1/In/Switches:command:on:4=1]"}
  
 
-Group NodeMCU1_SwitchOnTimings "NodeMCU1 Today's Tap Switch On Timings" <clock-on> (NodeMCU1) 
+Group NodeMCU1_SwitchOnTimings "Todays Tap Switch On Timings" <clock-on> (NodeMCU1) 
 Number NodeMCU1_Switch1_Timer "Switch1 Timer Value in Mins [%d]" <clock-on> (NodeMCU1_SwitchOnTimings)
 Number NodeMCU1_Switch2_Timer "Switch2 Timer Value in Mins [%d]" <clock-on> (NodeMCU1_SwitchOnTimings)
 Number NodeMCU1_Switch3_Timer "Switch3 Timer Value in Mins [%d]" <clock-on> (NodeMCU1_SwitchOnTimings)

@@ -35,9 +35,27 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure1 <String> retrieveWeatherCo
 	
 	var String wuFeature="conditions"
 	var String wuWeatherConditionJson = sendHttpGetRequest("http://api.wunderground.com/api/"+apiKey+"/"+wuFeature+"/q/Australia/Melbourne.json")
+	
+		logDebug("HomeAutomation","Json "+wuWeatherConditionJson);
+	
 	var float currentTempInCelcius = Float.valueOf(transform("JSONPATH","$.current_observation.temp_c",wuWeatherConditionJson))
+	var float currentRainInMM = Float.valueOf(transform("JSONPATH","$.current_observation.precip_1hr_metric",wuWeatherConditionJson))
+			logDebug("HomeAutomation","currentRainInMM "+currentRainInMM);
 	
 	Melbourne_Weather_Current_Temp_In_Celcius.postUpdate(currentTempInCelcius)	
+	Melbourne_Weather_Current_Rain_In_MM.postUpdate(currentRainInMM)
+	
+	var Number Rain_Last_12_Hours = Melbourne_Weather_Current_Rain_In_MM.averageSince(now.minusHours(12))
+	Melbourne_Weather_Rain_Last_12_Hours.postUpdate(Rain_Last_12_Hours.intValue)	
+	
+	
+	var Number Max_Rain_Last_12_Hours = Melbourne_Weather_Current_Rain_In_MM.maximumSince(now.minusHours(12)).state as DecimalType
+	Melbourne_Weather_Max_Rain_Last_12_Hours.postUpdate(Max_Rain_Last_12_Hours)
+	
+	var Number Min_Rain_Last_12_Hours = Melbourne_Weather_Current_Rain_In_MM.minimumSince(now.minusHours(12)).state as DecimalType
+	Melbourne_Weather_Min_Rain_Last_12_Hours.postUpdate(Min_Rain_Last_12_Hours)
+	
+	logDebug("HomeAutomation","Exiting retrieveWeatherConditions");
 ]
 
 /*
@@ -81,8 +99,10 @@ when
 	Time cron "0 0 0/1 * * ?"
 then
 	retrieveWeatherConditions.apply(wuKey)
-end
+	
 
+end
+/*
 rule ScheduleFrontGardenPotsWatering
 when
 	Time cron "0/30 * * * * ?"
@@ -116,4 +136,4 @@ then
 							])			
 	}	
 end
-
+ */

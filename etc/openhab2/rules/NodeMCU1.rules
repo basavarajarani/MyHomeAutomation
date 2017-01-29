@@ -93,7 +93,7 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch4TimerToday
  * End of Utility Functions/Procedures
  *************************************************************************************************************************/
 
-rule UpdateTapSwitchOnTimings
+rule SystemStarted
 when
 	System started
 then
@@ -104,11 +104,24 @@ then
 end
 
 
-rule ScheduleNodeMCU1Switches
+rule UpdateTapSwitchOnTimings
 when
 	Time cron "0 0/1 * * * ?"
 then
+	calculateSwitch1TimerToday.apply()
+	calculateSwitch2TimerToday.apply()
+	calculateSwitch3TimerToday.apply()
+	calculateSwitch4TimerToday.apply()
+end
 
+
+
+
+rule ScheduleNodeMCU1Switches
+when
+	Time cron "0 0/1 * * * ?"
+	
+then
 	
 	/*
 	 * ********************************************************************************************************************
