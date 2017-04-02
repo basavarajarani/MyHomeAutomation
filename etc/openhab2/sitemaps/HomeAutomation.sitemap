@@ -1,11 +1,55 @@
-sitemap HomeAutomation label="Home Automation"
+sitemap HomeAutomation label="Home Automation" icon="house"
 {
-	Frame label="Weather" {
+	Frame label="Weather Info" {
 		Group item=Temperature 
 		Group item=Rain 
 	}
-	Frame label="Home Garden" {
-		Group item=NodeMCU1
+	Frame label="Garden Controller" {
+		Text label="Inside Garden (NM1)" icon="garden" {
+			Switch item=NodeMCU1_Switch1 label="Raised Veggie Patch" icon="fruitsvegetables"
+			Switch item=NodeMCU1_Switch2 label="Mist Spray" icon="showerheadicon"
+			Switch item=NodeMCU1_Switch3 label="Inside Lawn" icon="lawnicon"
+			Text label="Tap Timer Values" icon="clock-on" {
+				Text item=NodeMCU1_Switch1_Timer label="Switch 1 Timer" icon="clock"
+				Text item=NodeMCU1_Switch2_Timer label="Switch 2 Timer"
+				Text item=NodeMCU1_Switch3_Timer label="Switch 3 Timer"
+				Text item=NodeMCU1_Switch4_Timer label="Switch 4 Timer"
+			}
+			Text label="Moisture Level" item=NodeMCU1_Moisture_Level  icon="moisturelevel"
+			
+		}
+		Text label="Front Garden (NM2)" icon="frontgarden" {
+			Switch item=NodeMCU2_Switch1 label="Hanging Pots" icon="hangingbasket"
+			Switch item=NodeMCU2_Switch2 label="Front Lawn 1" icon="grass"
+			Switch item=NodeMCU2_Switch3 label="Front Lawn 2" icon="grass"	
+			Text label="Tap Timer Values" icon="clock-on" {
+				Text item=NodeMCU2_Switch1_Timer label="Switch 1 Timer" icon="clock"
+				Text item=NodeMCU2_Switch2_Timer label="Switch 2 Timer"
+				Text item=NodeMCU2_Switch3_Timer label="Switch 3 Timer"
+			}				
+			Text label="Moisture Level" item=NodeMCU2_Moisture_Level  icon="moisturelevel"
+				
+		}
+		Text label="Backyard Garden (NM3)" icon="garden" {
+			Switch item=NodeMCU3_Switch1 label="Tomatoes Patch" icon="tomato"
+			Switch item=NodeMCU3_Switch2 label="Brinjal Patch" icon="eggplant"
+			Switch item=NodeMCU3_Switch3 label="Fruit Plants" icon="fruitstree"
+				Text item=NodeMCU3_Switch1_Timer label="Switch 1 Timer" icon="clock"
+				Text item=NodeMCU3_Switch2_Timer label="Switch 2 Timer"
+				Text item=NodeMCU3_Switch3_Timer label="Switch 3 Timer"			
+		}
+	}
+	
+
+	Frame label="Rooms" {
+		
+		Text label="Master Bedroom" icon="bedroom"
+		Text label="Amaira Bedroom" icon="kidsbed"
+		Text label="Guest Room 1" icon="bedroom_blue"
+		Text label="Guest Room 2" icon="bedroom_orange"
+		Text label="Study Room" icon="studyicon"
+		Text label="Garage" icon="garage-icon"
+		Text label="Theatre" icon="cinemascreen-90"
 	}
 
 }

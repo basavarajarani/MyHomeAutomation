@@ -1,3 +1,17 @@
+import org.eclipse.smarthome.core.library.items.SwitchItem
+import org.eclipse.smarthome.core.library.types.DecimalType
+import org.eclipse.smarthome.model.script.actions.Timer
+import org.eclipse.xtext.xbase.lib.Procedures
+
+
+/*
+ * These toggles are here to control the switch based ont he rain
+ */
+var Boolean NodeMCU1_Switch1_Soft_Toggle = false
+var Boolean NodeMCU1_Switch2_Soft_Toggle = false
+var Boolean NodeMCU1_Switch3_Soft_Toggle = false
+var Boolean NodeMCU1_Switch4_Soft_Toggle = false
+
 /************************************************************************************************************************
  * Begin of Utility Functions/Procedures
  *************************************************************************************************************************/
@@ -5,14 +19,15 @@
 /*
  * Procedure to Turn on the Switch with the run time in Minutes
  */
-val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInMinutes = [ 
+val Procedures.Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInMinutes = [ 
 	SwitchItem switchItem,
 	Number timerValueInMinutes |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusMinutes(timerValueInMinutes.intValue),[| 
-										sendCommand(switchItem,OFF)										
+										
+										switchItem.sendCommand(OFF)								
 										])	
 										
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
@@ -22,7 +37,7 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 /*
  * Procedure to Turn on the Switch with the run time in Seconds
  */
-val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInSeconds = [ 
+val Procedures.Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInSeconds = [ 
 	SwitchItem switchItem,
 	Number timerValueInSeconds |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
@@ -30,16 +45,16 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusSeconds(timerValueInSeconds.intValue),[| 
-										sendCommand(switchItem,OFF)										
+										switchItem.sendCommand(OFF)								
 										])	
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 										
 ]
 
 /*
- * Procedure to configure the Switch1OnTapTimer
+ * Procedure to configure the Switch1RunningTapTimer
  */
-val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch1TimerToday = [ |
+val Procedures.Procedure0 calculateSwitch1TimerToday = [ |
 	
 	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
 	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
@@ -52,7 +67,7 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch1TimerToday
 /*
  * Procedure to configure the Switch2OnTapTimer
  */
-val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch2TimerToday = [ |
+val Procedures.Procedure0 calculateSwitch2TimerToday = [ |
 	
 	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
 	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
@@ -65,7 +80,7 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch2TimerToday
 /*
  * Procedure to configure the Switch3OnTapTimer
  */
-val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch3TimerToday = [ |
+val Procedures.Procedure0 calculateSwitch3TimerToday = [ |
 	
 	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
 	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
@@ -79,7 +94,7 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch3TimerToday
 /*
  * Procedure to configure the Switch4OnTapTimer
  */
-val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch4TimerToday = [ |
+val Procedures.Procedure0 calculateSwitch4TimerToday = [ |
 	
 	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
 	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
@@ -89,10 +104,57 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch4TimerToday
 	
 	postUpdate(NodeMCU1_Switch4_Timer,derivedTemperatureTimer)
 ]
+
+/*
+ * Procedure to turn off the switch
+ */
+ val Procedures.Procedure1 <SwitchItem> turnOffSwitch = [
+ 	SwitchItem switchItem |
+ 	switchItem.sendCommand(OFF);
+ ]
+ 
+ /*
+  * Procedure to turn on the switch
+  */
+  val Procedures.Procedure1 <SwitchItem> turnOnSwitch = [
+  	SwitchItem switchItem |
+  	switchItem.sendCommand(ON);
+  ]
 /************************************************************************************************************************
  * End of Utility Functions/Procedures
  *************************************************************************************************************************/
 
+rule Runs_Every_Hour
+when
+	Time cron "0 0 0/1 * * ? *"
+then
+	if (Melbourne_Weather_Current_Rain_In_MM.state <= 0 ){
+		logDebug("HomeAutomation","Turning the NodeMCU1 Soft Toggles On")
+		NodeMCU1_Switch1_Soft_Toggle = true
+		NodeMCU1_Switch2_Soft_Toggle = true
+		NodeMCU1_Switch3_Soft_Toggle = true
+		NodeMCU1_Switch4_Soft_Toggle = true
+	} else {
+		logDebug("HomeAutomation","Turning the NodeMCU1 Soft Toggles Off")
+		
+		NodeMCU1_Switch1_Soft_Toggle = false
+		NodeMCU1_Switch2_Soft_Toggle = false
+		NodeMCU1_Switch3_Soft_Toggle = false
+		NodeMCU1_Switch4_Soft_Toggle = false		
+	}
+end
+
+/* 
+rule Runs_Every_15_Seconds
+when 
+	Time cron "0/15 * * * * ?"
+then
+	logDebug("HomeAutomation", "Node MCU 1 Switch 1 Timer:"+NodeMCU1_Switch1_Timer.state);
+	logDebug("HomeAutomation", "Node MCU 1 Switch 2 Timer:"+NodeMCU1_Switch2_Timer.state);
+	logDebug("HomeAutomation", "Node MCU 1 Switch 3 Timer:"+NodeMCU1_Switch3_Timer.state);
+	logDebug("HomeAutomation", "Node MCU 1 Switch 4 Timer:"+NodeMCU1_Switch4_Timer.state);			
+end
+*/
 rule SystemStarted
 when
 	System started
@@ -106,7 +168,7 @@ end
 
 rule UpdateTapSwitchOnTimings
 when
-	Time cron "0 0/1 * * * ?"
+	Time cron "0 0 0/1 * * ? *"
 then
 	calculateSwitch1TimerToday.apply()
 	calculateSwitch2TimerToday.apply()
@@ -115,14 +177,59 @@ then
 end
 
 
+rule SystemStopped
+when 
+	System shuts down
+then
+	 	logDebug("HomeAutomation","Entering--> NodeMCU1.SystemStopped")
 
+	/*
+	 * Turn off all the switches
+	 */
+	 
+	 NodeMCU1_Switches.members.forEach[ NodeMCU_Switch |
+	 	logDebug("HomeAutomation","Switching Off the Switch:"+NodeMCU_Switch.name)
+	 	NodeMCU_Switch.sendCommand(OFF)
+	 ]
+	  
+	 	logDebug("HomeAutomation","Exiting--> NodeMCU1.SystemStopped")
+	 
+end
+
+
+rule NodeMCU1_MoistureLevel_Update
+when
+	Item NodeMCU1_Moisture_Level received update
+then
+	
+	// Turn on the relevant switch if the Moisture Level is greater than 500
+	
+	if (NodeMCU1_Moisture_Level.state >= 500) {
+		if (NodeMCU1_Switch1.state == OFF ) {
+			logDebug("HomeAutomation", "Turning on the Switch 1 based on Moisture Level")
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch1,1);		
+		} else {
+			logDebug("HomeAutomation", "Skipping turning on the Switch as its already on.")
+			
+		}
+	}	
+end
+
+rule NodeMCU1_Switch1_Off
+when
+	Item NodeMCU1_Switch1 received command OFF
+then
+	if (NodeMCU1_Switch2.state == OFF) {
+		turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch2,(NodeMCU1_Switch1_Timer.state as DecimalType ) * 10)
+	}
+end
 
 rule ScheduleNodeMCU1Switches
 when
-	Time cron "0 0/1 * * * ?"
+	Time cron "0 0 0/1 * * ? *"
 	
 then
-	
+	logDebug("HomeAutomation", "ScheduleNodeMCU1Switches")
 	/*
 	 * ********************************************************************************************************************
 	 * NodeMCU1 Switch1 Section
@@ -133,29 +240,36 @@ then
 	 * Calculate the NodeMCU1 Switch1 timer
 	 * If the timer has to depend only on the derivedTemperature then use the below
 	 */
-	 
-	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch1,NodeMCU1_Switch1_Timer.state as DecimalType)
-										
+	 if (NodeMCU1_Switch1_Soft_Toggle) {
+		//turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch1,NodeMCU1_Switch1_Timer.state as DecimalType)
+	 }									
 	/*
 	 * ********************************************************************************************************************
 	 * NodeMCU1 Switch2 Section
 	 * ********************************************************************************************************************
 	 */	
+	 if (NodeMCU1_Switch2_Soft_Toggle) {
 
-	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch2,NodeMCU1_Switch2_Timer.state as DecimalType)
-				
+		//turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch2,NodeMCU1_Switch2_Timer.state as DecimalType)
+	 }			
 	/*
 	 * ********************************************************************************************************************
 	 * NodeMCU1 Switch3 Section
 	 * ********************************************************************************************************************
 	 */											
-
-	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch3,NodeMCU1_Switch3_Timer.state as DecimalType)
+		 if (NodeMCU1_Switch3_Soft_Toggle) {
+	
+//	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch3,NodeMCU1_Switch3_Timer.state as DecimalType)
+	
+	}
 	/*
 	 * ********************************************************************************************************************
 	 * NodeMCU1 Switch4 Section
 	 * ********************************************************************************************************************
 	 */							
-
-	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch4,NodeMCU1_Switch4_Timer.state as DecimalType)																					
+	if (NodeMCU1_Switch2_Soft_Toggle) {
+	
+	//	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch4,NodeMCU1_Switch4_Timer.state as DecimalType)		
+		
+	}																			
 end

@@ -9,9 +9,17 @@ Strategies {
 
 Items {
     // persist all items once a day and on every change and restore them from the db at startup
-    * : strategy = everyChange, everyDay, restoreOnStartup
-
+    //* : strategy = everyChange, everyDay, restoreOnStartup
     // additionally, persist all temperature and weather values every hour
-    Melbourne_Weather* : strategy = everyChange,everyMinute, restoreOnStartup
-    NodeMCU1* : strategy = everyHour, restoreOnStartup
+    NodeMCU1_Switch1 : strategy = everyHour, restoreOnStartup
+    NodeMCU1_Switch2 : strategy = everyHour, restoreOnStartup
+    NodeMCU1_Switch3 : strategy = everyHour, restoreOnStartup
+    NodeMCU1_Switch4 : strategy = everyHour, restoreOnStartup
+    
+    NodeMCU1_Switch1_Manual : strategy  = everyChange, restoreOnStartup
+    NodeMCU1_Switch2_Manual : strategy  = everyChange, restoreOnStartup
+    NodeMCU1_Switch3_Manual : strategy  = everyChange, restoreOnStartup
+    NodeMCU1_Switch4_Manual : strategy  = everyChange, restoreOnStartup
+    
+    NodeMCU1_Moisture_Level : strategy = everyChange, restoreOnStartup
 }

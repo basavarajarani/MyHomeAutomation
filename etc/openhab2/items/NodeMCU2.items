@@ -1,0 +1,19 @@
+/* Node to manage the front garden */
+Group NodeMCU2 "Veggie Garden Node"
+
+ 
+Group NodeMCU2_Switches <wallswitch> (NodeMCU2)
+
+Switch NodeMCU2_Switch1 "Veggie Patch Tap 1" <faucet> (NodeMCU2_Switches) {mqtt=">[mosquitto:NodeMCU2/In/Switches:command:off:5=0],>[mosquitto:NodeMCU2/In/Switches:command:on:5=1]"}
+Switch NodeMCU2_Switch2 "Veggie Patch Tap 2" <faucet> (NodeMCU2_Switches) {mqtt=">[mosquitto:NodeMCU2/In/Switches:command:off:6=0],>[mosquitto:NodeMCU2/In/Switches:command:on:6=1]"}
+Switch NodeMCU2_Switch3 "Veggie Patch Tap 3" <faucet> (NodeMCU2_Switches) {mqtt=">[mosquitto:NodeMCU2/In/Switches:command:off:7=0],>[mosquitto:NodeMCU2/In/Switches:command:on:7=1]"}
+Switch NodeMCU2_Switch4 "Veggie Patch Tap 4" <faucet> (NodeMCU2_Switches) {mqtt=">[mosquitto:NodeMCU2/In/Switches:command:off:8=0],>[mosquitto:NodeMCU2/In/Switches:command:on:8=1]"}
+ 
+
+Group NodeMCU2_SwitchOnTimings "Todays Tap Switch Run Timings" <clock-on> (NodeMCU2) 
+Number NodeMCU2_Switch1_Timer "Switch1 Timer Value in Mins [%d]" <clock-on> (NodeMCU2_SwitchOnTimings)
+Number NodeMCU2_Switch2_Timer "Switch2 Timer Value in Mins [%d]" <clock-on> (NodeMCU2_SwitchOnTimings)
+Number NodeMCU2_Switch3_Timer "Switch3 Timer Value in Mins [%d]" <clock-on> (NodeMCU2_SwitchOnTimings)
+Number NodeMCU2_Switch4_Timer "Switch4 Timer Value in Mins [%d]" <clock-on> (NodeMCU2_SwitchOnTimings)
+
+Number NodeMCU2_Moisture_Level  "[%d]"<rain>  {mqtt="<[mosquitto:NodeMCU2/Out/MoistureLevel:state:default]"}

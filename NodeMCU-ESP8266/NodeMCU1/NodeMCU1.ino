@@ -3,29 +3,33 @@
 #include <string.h>
 #include <pins_arduino.h>
 
-const char * ssid = "AMAIRA";
+const char * ssid = "AMAIRA2";
 const char * password = "PeacH@123";
-const char * inTopic = "NodeMCU1/In/Switches";
-const char * outTopic = "NodeMCU1/Out/Updates";
 
-//const char* mqtt_server = "test.mosquitto.org";
-//const char* mqtt_server = "iot.eclipse.org";
-const char * mqtt_server = "10.0.0.163";
+const String nodeName = "NodeMCU1";
+const String inMqttTopic= nodeName+ String("/In/Switches");
+const String outMqttUpdates = nodeName+String("/Out/Updates");
+const String outMqttMoisture = nodeName+String("/Out/MoistureLevel");
+const String mqtt_server = "10.0.0.163";
+
+const int AnalogIn  = A0;
+unsigned long currentTime;
+const int wateringThreshold = 500;
 
 WiFiClient espClient;
-PubSubClient client(espClient);
+PubSubClient mqttClient(espClient);
 void setup() {
 pinMode(LED_BUILTIN, INPUT);
-  pinMode(D0, OUTPUT);
-  pinMode(D1, OUTPUT);
-  pinMode(D2, OUTPUT);
-  pinMode(D3, OUTPUT);
+  pinMode(D5, OUTPUT);
+  pinMode(D6, OUTPUT);
+  pinMode(D7, OUTPUT);
+  pinMode(D8, OUTPUT);
   
   Serial.begin(9600);
   setup_wifi();
-  client.setServer(mqtt_server, 1883);
+  mqttClient.setServer(mqtt_server.c_str(), 1883);
 
-  client.setCallback(callback);
+  mqttClient.setCallback(callback);
   reconnect();
 }
 
@@ -64,39 +68,39 @@ void callback(char * topic, byte * payload, unsigned int length) {
   Serial.println(String(switchName)+"="+String(switchCommand));
 
   
-  if (strcmp(switchName,"1") == 0) {
+  if (strcmp(switchName,"5") == 0) {
     if (strcmp(switchCommand,"1") == 0) {
-          digitalWrite(D0, HIGH); // Turn the LED on (Note that LOW is the voltage level
-          Serial.println("DS0--> Turned On");
+          digitalWrite(D5, HIGH); // Turn the LED on (Note that LOW is the voltage level
+          Serial.println("DS5--> Turned On");
     } else if (strcmp(switchCommand,"0") == 0 ) {
-          digitalWrite(D0,LOW); // Turn the LED off (Note that LOW is the voltage level
-          Serial.println("DS0--> Turned off");
+          digitalWrite(D5,LOW); // Turn the LED off (Note that LOW is the voltage level
+          Serial.println("DS5--> Turned off");
     }
 
 
 
-  }else if (strcmp(switchName,"2") == 0) {
+  }else if (strcmp(switchName,"6") == 0) {
     if (strcmp(switchCommand,"1") == 0) {
-          digitalWrite(D1, HIGH); // Turn the LED on (Note that LOW is the voltage level
+          digitalWrite(D6, HIGH); // Turn the LED on (Note that LOW is the voltage level
           Serial.println("DS1--> Turned On");
     } else if (strcmp(switchCommand,"0") == 0 ) {
-          digitalWrite(D1,LOW); // Turn the LED off (Note that LOW is the voltage level
+          digitalWrite(D6,LOW); // Turn the LED off (Note that LOW is the voltage level
           Serial.println("DS1--> Turned off");
     }    
-  }else if (strcmp(switchName,"3") == 0) {
+  }else if (strcmp(switchName,"7") == 0) {
     if (strcmp(switchCommand,"1") == 0) {
-          digitalWrite(D2, HIGH); // Turn the LED on (Note that LOW is the voltage level
+          digitalWrite(D7, HIGH); // Turn the LED on (Note that LOW is the voltage level
           Serial.println("DS2--> Turned On");
     } else if (strcmp(switchCommand,"0") == 0 ) {
-          digitalWrite(D2,LOW); // Turn the LED off (Note that LOW is the voltage level
+          digitalWrite(D7,LOW); // Turn the LED off (Note that LOW is the voltage level
           Serial.println("DS2--> Turned off");
     }    
-  }else if (strcmp(switchName,"4") == 0) {
+  }else if (strcmp(switchName,"8") == 0) {
     if (strcmp(switchCommand,"1") == 0) {
-          digitalWrite(D3, HIGH); // Turn the LED on (Note that LOW is the voltage level
+          digitalWrite(D8, HIGH); // Turn the LED on (Note that LOW is the voltage level
           Serial.println("DS3--> Turned On");
     } else if (strcmp(switchCommand,"0") == 0 ) {
-          digitalWrite(D3,LOW); // Turn the LED off (Note that LOW is the voltage level
+          digitalWrite(D8,LOW); // Turn the LED off (Note that LOW is the voltage level
           Serial.println("DS3--> Turned off");
     }    
   }
@@ -107,18 +111,18 @@ void callback(char * topic, byte * payload, unsigned int length) {
 
 void reconnect() {
   // Loop until we're reconnected
-  while (!client.connected()) {
+  while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect("ESP8266Client")) {
+    if (mqttClient.connect(nodeName.c_str())) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      client.publish(outTopic, "Connected!");
+      mqttClient.publish(outMqttUpdates.c_str(), "Connected!");
       // ... and resubscribe
-      client.subscribe(inTopic);
+      mqttClient.subscribe(inMqttTopic.c_str());
     } else {
       Serial.print("failed, rc=");
-      Serial.print(client.state());
+      Serial.print(mqttClient.state());
       Serial.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
       delay(5000);
@@ -127,9 +131,39 @@ void reconnect() {
 }
 
 void loop() {
+  static unsigned long startTime = 0;
 
-  if (!client.connected()) {
+  if (!mqttClient.connected()) {
     reconnect();
   }
-  client.loop();
+  mqttClient.loop();
+
+
+  /* Check if the plants need watering */
+  currentTime = millis();
+
+  if (startTime == 0)
+  {
+    readAndSendSoilMoistureLevel();
+    startTime = currentTime;
+  }
+
+  if (currentTime - startTime >= 120000UL)
+  {
+    // reste start time; Every hour
+    // next iteration of loop a temperature reading will be done because startTime equals 0
+
+    startTime = 0;
+  }
+
+}
+
+void readAndSendSoilMoistureLevel () {
+  int moistureLevel = 0;
+  String moistureLevelString;
+  Serial.print("Sending MoistLevel:");
+  moistureLevel = analogRead(AnalogIn);
+  moistureLevelString = String((int) moistureLevel);
+  Serial.println(moistureLevelString);
+  mqttClient.publish(outMqttMoisture.c_str(), moistureLevelString.c_str());
 }

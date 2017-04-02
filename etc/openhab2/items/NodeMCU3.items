@@ -1,0 +1,14 @@
+Group NodeMCU3
+ 
+Group NodeMCU3_Switches "Switches" <wallswitch> (NodeMCU3)
+Switch NodeMCU3_Switch1 "Veggie Patch Tap 1" <faucet> (NodeMCU3_Switches) {mqtt=">[mosquitto:NodeMCU3/In/Switches:command:off:1=0],>[mosquitto:NodeMCU3/In/Switches:command:on:1=1]"}
+Switch NodeMCU3_Switch2 "Veggie Patch Tap 2" <faucet> (NodeMCU3_Switches) {mqtt=">[mosquitto:NodeMCU3/In/Switches:command:off:2=0],>[mosquitto:NodeMCU3/In/Switches:command:on:2=1]"}
+Switch NodeMCU3_Switch3 "Veggie Patch Tap 3" <faucet> (NodeMCU3_Switches) {mqtt=">[mosquitto:NodeMCU3/In/Switches:command:off:3=0],>[mosquitto:NodeMCU3/In/Switches:command:on:3=1]"}
+Switch NodeMCU3_Switch4 "Veggie Patch Tap 4" <faucet> (NodeMCU3_Switches) {mqtt=">[mosquitto:NodeMCU3/In/Switches:command:off:4=0],>[mosquitto:NodeMCU3/In/Switches:command:on:4=1]"}
+ 
+
+Group NodeMCU3_SwitchOnTimings "Todays Tap Switch Run Timings" <clock-on> (NodeMCU3) 
+Number NodeMCU3_Switch1_Timer "Switch1 Timer Value in Mins [%d]" <clock-on> (NodeMCU3_SwitchOnTimings)
+Number NodeMCU3_Switch2_Timer "Switch2 Timer Value in Mins [%d]" <clock-on> (NodeMCU3_SwitchOnTimings)
+Number NodeMCU3_Switch3_Timer "Switch3 Timer Value in Mins [%d]" <clock-on> (NodeMCU3_SwitchOnTimings)
+Number NodeMCU3_Switch4_Timer "Switch4 Timer Value in Mins [%d]" <clock-on> (NodeMCU3_SwitchOnTimings)
