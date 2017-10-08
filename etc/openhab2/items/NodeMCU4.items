@@ -1,0 +1,17 @@
+Group NodeMCU4
+ 
+Group NodeMCU4_Switches "Switches" <wallswitch> (NodeMCU4)
+Switch NodeMCU4_Switch1 "Sprinkler 1" <faucet> (NodeMCU4_Switches) {mqtt=">[mosquitto:NodeMCU4/In/Switches:command:off:5=0],>[mosquitto:NodeMCU4/In/Switches:command:on:5=1]"}
+Switch NodeMCU4_Switch2 "Sprinkler 2" <faucet> (NodeMCU4_Switches) {mqtt=">[mosquitto:NodeMCU4/In/Switches:command:off:6=0],>[mosquitto:NodeMCU4/In/Switches:command:on:6=1]"}
+Switch NodeMCU4_Switch3 "Sprinkler 3" <faucet> (NodeMCU4_Switches) {mqtt=">[mosquitto:NodeMCU4/In/Switches:command:off:7=0],>[mosquitto:NodeMCU4/In/Switches:command:on:7=1]"}
+Switch NodeMCU4_Switch4 "Sprinkler 4" <faucet> (NodeMCU4_Switches) {mqtt=">[mosquitto:NodeMCU4/In/Switches:command:off:8=0],>[mosquitto:NodeMCU4/In/Switches:command:on:8=1]"}
+ 
+
+Group NodeMCU4_SwitchOnTimings "Todays Tap Switch Run Timings" <clock-on> (NodeMCU4) 
+Number NodeMCU4_Switch1_Timer "Switch1 Timer Value in Mins [%d]" <clock-on> (NodeMCU4_SwitchOnTimings)
+Number NodeMCU4_Switch2_Timer "Switch2 Timer Value in Mins [%d]" <clock-on> (NodeMCU4_SwitchOnTimings)
+Number NodeMCU4_Switch3_Timer "Switch3 Timer Value in Mins [%d]" <clock-on> (NodeMCU4_SwitchOnTimings)
+Number NodeMCU4_Switch4_Timer "Switch4 Timer Value in Mins [%d]" <clock-on> (NodeMCU4_SwitchOnTimings)
+
+Number NodeMCU4_Moisture_Level  "[%d]"<rain> (NodeMCU4_Moisture) {mqtt="<[mosquitto:NodeMCU4/Out/MoistureLevel:state:default]"}
+

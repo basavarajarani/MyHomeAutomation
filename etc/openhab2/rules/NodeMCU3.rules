@@ -1,0 +1,162 @@
+
+var Boolean NodeMCU3_Switch2_Initial_Run = false
+var Boolean NodeMCU3_Switch3_Initial_Run = false
+
+/************************************************************************************************************************
+ * Begin of Utility Functions/Procedures
+ *************************************************************************************************************************/
+ 
+ 
+/*
+ * Procedure to Turn on the Switch with the run time in Minutes
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInMinutes = [ 
+	SwitchItem switchItem,
+	Number timerValueInMinutes |
+	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
+	sendCommand(switchItem,ON);
+
+	var Timer switchTimer = createTimer(now.plusMinutes(timerValueInMinutes.intValue),[| 
+										sendCommand(switchItem,OFF)										
+										])	
+										
+	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
+										
+]
+
+/*
+ * Procedure to Turn on the Switch with the run time in Seconds
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInSeconds = [ 
+	SwitchItem switchItem,
+	Number timerValueInSeconds |
+	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
+	
+	sendCommand(switchItem,ON);
+
+	var Timer switchTimer = createTimer(now.plusSeconds(timerValueInSeconds.intValue),[| 
+										sendCommand(switchItem,OFF);
+										])	
+	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
+										
+]
+
+/*
+ * Procedure to configure the Switch1OnTapTimer
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch1TimerToday = [ |
+	
+	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
+	var Number Low_Temp = Melbourne_Weather_Low_In_Celcius.state as DecimalType
+	var Number derivedTemperature =( (Low_Temp+High_Temp)/2 + Current_Temp)/2;	
+	var Number derivedTemperatureTimer = Math.ceil((derivedTemperature/10).doubleValue)
+	postUpdate(NodeMCU3_Switch1_Timer,derivedTemperatureTimer)
+]
+
+/*
+ * Procedure to configure the Switch2OnTapTimer
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch2TimerToday = [ |
+	
+	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
+	var Number Low_Temp = Melbourne_Weather_Low_In_Celcius.state as DecimalType
+	var Number derivedTemperature =( (Low_Temp+High_Temp)/2 + Current_Temp)/2;	
+	var Number derivedTemperatureTimer = Math.ceil((derivedTemperature/10).doubleValue)
+	postUpdate(NodeMCU3_Switch2_Timer,derivedTemperatureTimer)
+]
+
+/*
+ * Procedure to configure the Switch3OnTapTimer
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch3TimerToday = [ |
+	
+	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
+	var Number Low_Temp = Melbourne_Weather_Low_In_Celcius.state as DecimalType
+	var Number derivedTemperature =( (Low_Temp+High_Temp)/2 + Current_Temp)/2;	
+	var Number derivedTemperatureTimer = Math.ceil((derivedTemperature/10).doubleValue)
+	
+	postUpdate(NodeMCU3_Switch3_Timer,derivedTemperatureTimer)
+]
+
+/*
+ * Procedure to configure the Switch4OnTapTimer
+ */
+val org.eclipse.xtext.xbase.lib.Procedures$Procedure0 calculateSwitch4TimerToday = [ |
+	
+	var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+	var Number High_Temp = Melbourne_Weather_High_In_Celcius.state as DecimalType
+	var Number Low_Temp = Melbourne_Weather_Low_In_Celcius.state as DecimalType
+	var Number derivedTemperature =( (Low_Temp+High_Temp)/2 + Current_Temp)/2;	
+	var Number derivedTemperatureTimer = Math.ceil((derivedTemperature/10).doubleValue)
+	
+	postUpdate(NodeMCU3_Switch4_Timer,derivedTemperatureTimer)
+]
+
+/*
+ * Procedure to turn off the switch
+ */
+ val org.eclipse.xtext.xbase.lib.Procedures$Procedure1 <SwitchItem> turnOffSwitch = [
+ 	SwitchItem switchItem |
+ 	switchItem.sendCommand(OFF);
+ ]
+/************************************************************************************************************************
+ * End of Utility Functions/Procedures
+ *************************************************************************************************************************/
+rule SystemStarted
+when
+	System started
+then
+	//calculateSwitch1TimerToday.apply()
+	calculateSwitch2TimerToday.apply()
+	calculateSwitch3TimerToday.apply()
+	calculateSwitch4TimerToday.apply()
+end
+
+
+rule UpdateTapSwitchOnTimings
+when
+	Time cron "0 0/1 * * * ?"
+then
+	calculateSwitch1TimerToday.apply()
+	calculateSwitch2TimerToday.apply()
+	calculateSwitch3TimerToday.apply()
+	calculateSwitch4TimerToday.apply()
+end
+
+
+rule SystemStopped
+when 
+	System shuts down
+then
+	 	logDebug("HomeAutomation","Entering--> NodeMCU3.SystemStopped")
+
+	/*
+	 * Turn off all the switches
+	 */
+	 
+	 NodeMCU3_Switches.members.forEach[ NodeMCU_Switch |
+	 	logDebug("HomeAutomation","Switching Off the Switch:"+NodeMCU_Switch.name)
+	 	NodeMCU_Switch.sendCommand(OFF)
+	 ]
+	  
+	 	logDebug("HomeAutomation","Exiting--> NodeMCU3.SystemStopped")
+	 
+end
+
+
+rule startTomatoBedFor2Minutes
+when
+	Time cron "0 30 7,78 * * ?"
+then
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+
+	if (rainToday <=0 && rainYesterday <=0 ) {
+		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU3_Switch1,2);
+		
+	}
+end
+
