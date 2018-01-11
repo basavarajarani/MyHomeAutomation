@@ -5,57 +5,27 @@ sitemap HomeAutomation label="Home Automation" icon="house"
 		Group item=Rain 
 	}
 	Frame label="Garden Controller" {
-		Text label="Inside Garden (NM1)" icon="garden" {
-			Switch item=NodeMCU1_Switch1 label="Raised Veggie Patch" icon="fruitsvegetables"
-			Switch item=NodeMCU1_Switch2 label="Mist Spray" icon="showerheadicon"
-			Switch item=NodeMCU1_Switch3 label="Inside Lawn" icon="lawnicon"
-			Text label="Tap Timer Values" icon="clock-on" {
-				Text item=NodeMCU1_Switch1_Timer label="Switch 1 Timer" icon="clock"
-				Text item=NodeMCU1_Switch2_Timer label="Switch 2 Timer"
-				Text item=NodeMCU1_Switch3_Timer label="Switch 3 Timer"
-				Text item=NodeMCU1_Switch4_Timer label="Switch 4 Timer"
-			}
-			Text label="Moisture Level" item=NodeMCU1_Moisture_Level  icon="moisturelevel"
-			Text label="Online Status" item=NodeMCU1_Status icon="moisturelevel"
-			Text label="Last Ping Time" item=NodeMCU1_Last_Ping icon="moisturelevel"
+		Text label="Front Garden (NM1)" icon="frontgarden" {
+			Switch item=NodeMCU1_Switch1 label="Main Valve" icon="faucet"
+			Switch item=NodeMCU1_Switch2 label="Lilly Pilly Bed" icon="garden"
 			
 		}
 		Text label="Front Garden (NM2)" icon="frontgarden" {
 			Switch item=NodeMCU2_Switch1 label="Hanging Pots" icon="hangingbasket"
 			Switch item=NodeMCU2_Switch2 label="Front Lawn 1" icon="grass"
-			Switch item=NodeMCU2_Switch3 label="Front Lawn 2" icon="grass"	
-			Text label="Tap Timer Values" icon="clock-on" {
-				Text item=NodeMCU2_Switch1_Timer label="Switch 1 Timer" icon="clock"
-				Text item=NodeMCU2_Switch2_Timer label="Switch 2 Timer"
-				Text item=NodeMCU2_Switch3_Timer label="Switch 3 Timer"
-			}				
-			Text label="Moisture Level" item=NodeMCU2_Moisture_Level  icon="moisturelevel"
+			Switch item=NodeMCU2_Switch3 label="Rose Bed" icon="roseplant"	
 				
 		}
 		Text label="Backyard Garden (NM3)" icon="garden" {
 			Switch item=NodeMCU3_Switch1 label="Tomatoes Patch" icon="tomato"
 			Switch item=NodeMCU3_Switch2 label="Brinjal Patch" icon="eggplant"
 			Switch item=NodeMCU3_Switch3 label="Fruit Plants" icon="fruitstree"
-			Text label="Tap Timer Values" icon="clock-on" {
-				Text item=NodeMCU3_Switch1_Timer label="Switch 1 Timer" icon="clock"
-				Text item=NodeMCU3_Switch2_Timer label="Switch 2 Timer"
-				Text item=NodeMCU3_Switch3_Timer label="Switch 3 Timer"		
-			
-			}	
-			Text label="Moisture Level" item=NodeMCU3_Moisture_Level  icon="moisturelevel"
 		}
 
-		Text label="Lawn Control (NM4)" icon="garden" {
+		Text label="Lawn Control (NM4)" icon="grass" {
 			Switch item=NodeMCU4_Switch1 label="Sprinkler 1" icon="grass"
 			Switch item=NodeMCU4_Switch2 label="Sprinkler 2" icon="grass"
 			Switch item=NodeMCU4_Switch3 label="Sprinkler 3" icon="grass"
-			Text label="Tap Timer Values" icon="clock-on" {
-				Text item=NodeMCU4_Switch1_Timer label="Switch 1 Timer" icon="clock"
-				Text item=NodeMCU4_Switch2_Timer label="Switch 2 Timer"
-				Text item=NodeMCU4_Switch3_Timer label="Switch 3 Timer"		
-			
-			}	
-			Text label="Moisture Level" item=NodeMCU4_Moisture_Level  icon="moisturelevel"
 		}
 	}
 	

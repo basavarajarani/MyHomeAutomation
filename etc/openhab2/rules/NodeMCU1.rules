@@ -23,11 +23,13 @@ val Procedures.Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInMinutes
 	SwitchItem switchItem,
 	Number timerValueInMinutes |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
+	sendCommand(NodeMCU1_Switch1,ON);
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusMinutes(timerValueInMinutes.intValue),[| 
 										
-										switchItem.sendCommand(OFF)								
+										switchItem.sendCommand(OFF);
+										sendCommand(NodeMCU1_Switch1,OFF);										
 										])	
 										
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
@@ -42,10 +44,12 @@ val Procedures.Procedure2 <SwitchItem, Number> turnOnSwitchWithRunTimerInSeconds
 	Number timerValueInSeconds |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 	
+	sendCommand(NodeMCU1_Switch1,ON);
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusSeconds(timerValueInSeconds.intValue),[| 
-										switchItem.sendCommand(OFF)								
+										switchItem.sendCommand(OFF);								
+										sendCommand(NodeMCU1_Switch1,OFF);
 										])	
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 										
@@ -215,14 +219,6 @@ then
 	}	
 end
 
-rule NodeMCU1_Switch1_Off
-when
-	Item NodeMCU1_Switch1 received command OFF
-then
-	if (NodeMCU1_Switch2.state == OFF) {
-		turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch2,(NodeMCU1_Switch1_Timer.state as DecimalType ) * 10)
-	}
-end
 
 rule ScheduleNodeMCU1Switches
 when
@@ -282,10 +278,10 @@ then
 	if (NodeMCU1_Status.state == "Offline") {
 		//sendBroadcastNotification("NodeMCU1 is Offline since "+NodeMCU1_Last_Ping.state);
 	}
-	NodeMCU1_Status.postUpdate("Offline");
+//	NodeMCU1_Status.postUpdate("Offline");
 	
 	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU1/In/Switches -m 100=100"
-	executeCommandLine(sendMqttProbe);
+//	executeCommandLine(sendMqttProbe);
 end
 
 rule NodeStatusReceived
@@ -295,7 +291,20 @@ then
 		logDebug("HomeAutomation", "NodeStatusReceived:"+NodeMCU1_Status.state);
 		if ( NodeMCU1_Status.state != "Offline") {
 			var DateTimeType dateTime = new DateTimeType();
-			NodeMCU1_Last_Ping.postUpdate(dateTime.format("[%1$td/%1$tm/%1$tY %1$tT]"));
+		//	NodeMCU1_Last_Ping.postUpdate(dateTime.format("[%1$td/%1$tm/%1$tY %1$tT]"));
 		}
 		
+end
+
+rule startLillyPillyBedTapFor2Minutes
+when
+	Time cron "0 30 8,20 * * ?"
+then
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+
+	if (rainToday <=0 && rainYesterday <=0 ) {
+		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch2,5);
+		
+	}
 end

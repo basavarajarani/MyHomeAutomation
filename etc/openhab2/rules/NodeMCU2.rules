@@ -14,10 +14,12 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	SwitchItem switchItem,
 	Number timerValueInMinutes |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
+	sendCommand(NodeMCU1_Switch1,ON);
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusMinutes(timerValueInMinutes.intValue),[| 
-										sendCommand(switchItem,OFF)										
+										sendCommand(switchItem,OFF);
+										sendCommand(NodeMCU1_Switch1,OFF);
 										])	
 										
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
@@ -32,10 +34,12 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	Number timerValueInSeconds |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 	
+	sendCommand(NodeMCU1_Switch1,ON);
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusSeconds(timerValueInSeconds.intValue),[| 
 										sendCommand(switchItem,OFF);
+										sendCommand(NodeMCU1_Switch1,OFF);
 										])	
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 										
@@ -148,9 +152,9 @@ end
 
 rule startHangingPotTapFor15Seconds
 when
-        Time cron "0 0 6,18 * * ?"
+        Time cron "0 30 6,13,18 * * ?"
 then
-        turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,15);
+        turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,30);
 end
 
 /*
@@ -168,7 +172,7 @@ end
 
 rule startFrontLawn4TapFor2Minutes
 when
-	Time cron "40 6 19 * * ?"
+	Time cron "40 6 18 * * ?"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
@@ -180,7 +184,7 @@ end
 
 rule startRoseBed2TapFor2Minutes
 when
-	Time cron "0 30 18 * * ?"
+	Time cron "0 50 6,18 * * ?"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;

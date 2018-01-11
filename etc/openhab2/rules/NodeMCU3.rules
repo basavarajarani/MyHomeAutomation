@@ -147,15 +147,15 @@ then
 end
 
 
-rule startTomatoBedFor2Minutes
+rule startTomatoBedFor4Minutes
 when
-	Time cron "0 30 7,78 * * ?"
+	Time cron "0 30 7,13,18 * * ?"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
 	if (rainToday <=0 && rainYesterday <=0 ) {
-		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU3_Switch1,2);
+		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU3_Switch1,4);
 		
 	}
 end

@@ -13,10 +13,12 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	SwitchItem switchItem,
 	Number timerValueInMinutes |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
+	sendCommand(NodeMCU1_Switch1,ON);
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusMinutes(timerValueInMinutes.intValue),[| 
-										sendCommand(switchItem,OFF)										
+										sendCommand(switchItem,OFF)
+										sendCommand(NodeMCU1_Switch1,OFF);										
 										])	
 										
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
@@ -30,11 +32,13 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	SwitchItem switchItem,
 	Number timerValueInSeconds |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
+	sendCommand(NodeMCU1_Switch1,ON);
 	
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusSeconds(timerValueInSeconds.intValue),[| 
 										sendCommand(switchItem,OFF);
+										sendCommand(NodeMCU1_Switch1,OFF);										
 										])	
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 										

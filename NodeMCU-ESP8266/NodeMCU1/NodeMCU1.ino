@@ -9,6 +9,8 @@ const char * password = "PeacH@123";
 const String nodeName = "NodeMCU1";
 const String inMqttTopic= nodeName+ String("/In/Switches");
 const String outMqttUpdates = nodeName+String("/Out/Updates");
+const String outMqttStatus = nodeName+String("/Out/Status");
+
 const String outMqttMoisture = nodeName+String("/Out/MoistureLevel");
 const String mqtt_server = "10.0.0.163";
 
@@ -103,6 +105,11 @@ void callback(char * topic, byte * payload, unsigned int length) {
           digitalWrite(D8,LOW); // Turn the LED off (Note that LOW is the voltage level
           Serial.println("DS3--> Turned off");
     }    
+  }else if (strcmp(switchName,"100") == 0) {
+    if (strcmp(switchCommand,"100") == 0) {
+      Serial.println("Received Probe Status");
+      mqttClient.publish(outMqttStatus.c_str(), "Online");
+    }
   }
 
   Serial.println();
