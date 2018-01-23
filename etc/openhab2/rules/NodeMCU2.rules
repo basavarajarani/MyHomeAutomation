@@ -15,10 +15,12 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	Number timerValueInMinutes |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
 	sendCommand(NodeMCU1_Switch1,ON);
+	Thread::sleep(1000)
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusMinutes(timerValueInMinutes.intValue),[| 
 										sendCommand(switchItem,OFF);
+										Thread::sleep(1000)
 										sendCommand(NodeMCU1_Switch1,OFF);
 										])	
 										
@@ -35,10 +37,12 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 	
 	sendCommand(NodeMCU1_Switch1,ON);
+	Thread::sleep(1000)
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusSeconds(timerValueInSeconds.intValue),[| 
 										sendCommand(switchItem,OFF);
+										Thread::sleep(1000)
 										sendCommand(NodeMCU1_Switch1,OFF);
 										])	
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
@@ -150,11 +154,25 @@ then
 	 
 end
 
-rule startHangingPotTapFor15Seconds
+rule startHangingPotTapFor20SecondsSummer
 when
-        Time cron "0 30 6,13,18 * * ?"
+        Time cron "0 30 6,9,12,15,18 * DEC-MAR ?"
 then
-        turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,30);
+        turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
+end
+
+rule startHangingPotTapFor20SecondsAutumn
+when
+        Time cron "0 30 6,13,18 * APR-May ?"
+then
+        turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
+end
+
+rule startHangingPotTapFor20SecondsWinter
+when
+        Time cron "0 30 6,13,18 * JUN-AUG ?"
+then
+        turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
 end
 
 /*
@@ -182,7 +200,7 @@ then
 	}
 end
 
-rule startRoseBed2TapFor2Minutes
+rule startRoseBed2TapFor2MinutesNonSummer
 when
 	Time cron "0 50 6,18 * * ?"
 then
@@ -195,3 +213,15 @@ then
 	}
 end
 
+rule startRoseBed2TapFor2MinutesSummer
+when
+	Time cron "0 50 6,12,18 * DEC-MAR ?"
+then
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+
+	if (rainToday <=0 && rainYesterday <=0 ) {
+		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU2_Switch3,2);
+		
+	}
+end

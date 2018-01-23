@@ -14,10 +14,12 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	Number timerValueInMinutes |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInMinutes with params ["+switchItem.name+","+timerValueInMinutes+"]");
 	sendCommand(NodeMCU1_Switch1,ON);
+	Thread::sleep(1000)
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusMinutes(timerValueInMinutes.intValue),[| 
 										sendCommand(switchItem,OFF)
+										Thread::sleep(1000)
 										sendCommand(NodeMCU1_Switch1,OFF);										
 										])	
 										
@@ -33,11 +35,12 @@ val org.eclipse.xtext.xbase.lib.Procedures$Procedure2 <SwitchItem, Number> turnO
 	Number timerValueInSeconds |
 	logDebug("HomeAutomation","Entering turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
 	sendCommand(NodeMCU1_Switch1,ON);
-	
+	Thread::sleep(1000)
 	sendCommand(switchItem,ON);
 
 	var Timer switchTimer = createTimer(now.plusSeconds(timerValueInSeconds.intValue),[| 
 										sendCommand(switchItem,OFF);
+										Thread::sleep(1000)
 										sendCommand(NodeMCU1_Switch1,OFF);										
 										])	
 	logDebug("HomeAutomation","Exiting turnOnSwitchWithRunTimerInSeconds with params ["+switchItem.name+","+timerValueInSeconds+"]");
@@ -165,14 +168,12 @@ end
 
 rule startFrontLawn1TapFor2Minutes
 when
-	Time cron "0 0 19 * * ?"
+	Time cron "0 0 7,19 * * ?"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
 	if (rainToday <=0 && rainYesterday <=0 ) {
-		Thread::sleep(3000);
-		
 		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch1,2);
 		
 	}
@@ -181,7 +182,7 @@ end
 
 rule startFrontLawn2TapFor2Minutes
 when
-	Time cron "10 2 19 * * ?"
+	Time cron "10 2 7,19 * * ?"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
@@ -194,7 +195,7 @@ end
 
 rule startFrontLawn3TapFor2Minutes
 when
-	Time cron "20 4 19 * * ?"
+	Time cron "20 4 7,19 * * ?"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
