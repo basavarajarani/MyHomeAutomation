@@ -1,4 +1,3 @@
-/* Node to manage the front garden */
 Group NodeMCU2 "Veggie Garden Node"
 
  
@@ -17,3 +16,7 @@ Number NodeMCU2_Switch3_Timer "Switch3 Timer Value in Mins [%d]" <clock-on> (Nod
 Number NodeMCU2_Switch4_Timer "Switch4 Timer Value in Mins [%d]" <clock-on> (NodeMCU2_SwitchOnTimings)
 
 Number NodeMCU2_Moisture_Level  "[%d]"<rain>  {mqtt="<[mosquitto:NodeMCU2/Out/MoistureLevel:state:default]"}
+
+String NodeMCU2_Status "[%s]" <rain> {mqtt="<[mosquitto:NodeMCU2/Out/Status:state:default]"}
+
+String NodeMCU2_Last_Ping "[%s]" <rain>

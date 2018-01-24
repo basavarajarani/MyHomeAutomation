@@ -132,37 +132,6 @@ val Procedures.Procedure0 calculateSwitch4TimerToday = [ |
  * End of Utility Functions/Procedures
  *************************************************************************************************************************/
 
-rule Runs_Every_Hour
-when
-	Time cron "0 0 0/1 * * ? *"
-then
-	if (Melbourne_Weather_Current_Rain_In_MM.state <= 0 ){
-		logDebug("HomeAutomation","Turning the NodeMCU1 Soft Toggles On")
-		NodeMCU1_Switch1_Soft_Toggle = true
-		NodeMCU1_Switch2_Soft_Toggle = true
-		NodeMCU1_Switch3_Soft_Toggle = true
-		NodeMCU1_Switch4_Soft_Toggle = true
-	} else {
-		logDebug("HomeAutomation","Turning the NodeMCU1 Soft Toggles Off")
-		
-		NodeMCU1_Switch1_Soft_Toggle = false
-		NodeMCU1_Switch2_Soft_Toggle = false
-		NodeMCU1_Switch3_Soft_Toggle = false
-		NodeMCU1_Switch4_Soft_Toggle = false		
-	}
-end
-
-/* 
-rule Runs_Every_15_Seconds
-when 
-	Time cron "0/15 * * * * ?"
-then
-	logDebug("HomeAutomation", "Node MCU 1 Switch 1 Timer:"+NodeMCU1_Switch1_Timer.state);
-	logDebug("HomeAutomation", "Node MCU 1 Switch 2 Timer:"+NodeMCU1_Switch2_Timer.state);
-	logDebug("HomeAutomation", "Node MCU 1 Switch 3 Timer:"+NodeMCU1_Switch3_Timer.state);
-	logDebug("HomeAutomation", "Node MCU 1 Switch 4 Timer:"+NodeMCU1_Switch4_Timer.state);			
-end
-*/
 rule SystemStarted
 when
 	System started
@@ -204,68 +173,6 @@ then
 	 
 end
 
-
-rule ScheduleNodeMCU1Switches
-when
-	Time cron "0 0 0/1 * * ? *"
-	
-then
-	logDebug("HomeAutomation", "ScheduleNodeMCU1Switches")
-	/*
-	 * ********************************************************************************************************************
-	 * NodeMCU1 Switch1 Section
-	 * ********************************************************************************************************************
-	 */
-	 
-	/* 
-	 * Calculate the NodeMCU1 Switch1 timer
-	 * If the timer has to depend only on the derivedTemperature then use the below
-	 */
-	 if (NodeMCU1_Switch1_Soft_Toggle) {
-		//turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch1,NodeMCU1_Switch1_Timer.state as DecimalType)
-	 }									
-	/*
-	 * ********************************************************************************************************************
-	 * NodeMCU1 Switch2 Section
-	 * ********************************************************************************************************************
-	 */	
-	 if (NodeMCU1_Switch2_Soft_Toggle) {
-
-		//turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch2,NodeMCU1_Switch2_Timer.state as DecimalType)
-	 }			
-	/*
-	 * ********************************************************************************************************************
-	 * NodeMCU1 Switch3 Section
-	 * ********************************************************************************************************************
-	 */											
-		 if (NodeMCU1_Switch3_Soft_Toggle) {
-	//	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch3,NodeMCU1_Switch3_Timer.state as DecimalType)
-	
-	}
-	/*
-	 * ********************************************************************************************************************
-	 * NodeMCU1 Switch4 Section
-	 * ********************************************************************************************************************
-	 */							
-	if (NodeMCU1_Switch2_Soft_Toggle) {
-	
-	//	turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU1_Switch4,NodeMCU1_Switch4_Timer.state as DecimalType)		
-		
-	}																			
-end
-
-rule NodeStatusReceived
-when
-	Item NodeMCU1_Status received update
-then
-		logDebug("HomeAutomation", "NodeStatusReceived:"+NodeMCU1_Status.state);
-		if ( NodeMCU1_Status.state != "Offline") {
-			var DateTimeType dateTime = new DateTimeType();
-		//	NodeMCU1_Last_Ping.postUpdate(dateTime.format("[%1$td/%1$tm/%1$tY %1$tT]"));
-		}
-		
-end
-
 rule startLillyPillyBedTapFor2MinutesNonSummer
 when
 	Time cron "0 30 8,20 * MAR-NOV ? *"
@@ -291,3 +198,31 @@ then
 		
 	}
 end
+/*
+rule ProbeNodeStatus
+when
+        Time cron "0 0/1 * 1/1 * ? *"
+then
+        logDebug("HomeAutomation", "Sending Node Status Probe for NodeMCU1");
+//        if (NodeMCU1_Status.state == "Offline") {
+                //sendBroadcastNotification("NodeMCU1 is Offline since "+NodeMCU1_Last_Ping.state);
+ //       }
+        NodeMCU1_Status.postUpdate("Offline");
+   
+        var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU1/In/Switches -m 100=100"
+        executeCommandLine(sendMqttProbe);
+end     
+        
+rule NodeStatusReceived
+when    
+        Item NodeMCU1_Status received update
+then    
+                logDebug("HomeAutomation", "Node 1 StatusReceived:"+NodeMCU1_Status.state);
+                if ( NodeMCU1_Status.state != "Offline") {                      
+                        var DateTimeType dateTime = new DateTimeType();         
+                        NodeMCU1_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
+                }       
+                                                                                
+end
+
+*/

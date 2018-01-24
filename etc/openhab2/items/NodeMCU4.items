@@ -15,3 +15,6 @@ Number NodeMCU4_Switch4_Timer "Switch4 Timer Value in Mins [%d]" <clock-on> (Nod
 
 Number NodeMCU4_Moisture_Level  "[%d]"<rain> (NodeMCU4_Moisture) {mqtt="<[mosquitto:NodeMCU4/Out/MoistureLevel:state:default]"}
 
+String NodeMCU4_Status "[%s]" <rain> {mqtt="<[mosquitto:NodeMCU4/Out/Status:state:default]"}
+
+String NodeMCU4_Last_Ping "[%s]" <rain>

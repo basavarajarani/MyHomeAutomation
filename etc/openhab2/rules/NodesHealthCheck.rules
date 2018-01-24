@@ -1,0 +1,84 @@
+val Procedures.Procedure2 <StringItem,String> probeNodeStatusProc = [
+	StringItem statusItem,
+	String switchName |
+
+	logDebug("HomeAutomation","Sending Node Status Probe for Node:"+switchName);
+
+	statusItem.postUpdate("Offline");
+
+	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t "+switchName+"/In/Switches -m 100=100"
+        executeCommandLine(sendMqttProbe);
+]
+
+rule ProbeNodeStatus
+when
+	Time cron "0 0/1 * 1/1 * ? *"
+then
+	logDebug("HomeAutomation", "Sending Node Status Probe for all Nodes");
+	
+	probeNodeStatusProc.apply(NodeMCU1_Status,"NodeMCU1");
+
+	probeNodeStatusProc.apply(NodeMCU2_Status,"NodeMCU2");
+
+	probeNodeStatusProc.apply(NodeMCU3_Status,"NodeMCU3");
+
+	probeNodeStatusProc.apply(NodeMCU4_Status,"NodeMCU4");
+
+end
+
+rule Node4StatusReceived
+when
+	Item NodeMCU4_Status received update
+then
+		logDebug("HomeAutomation", "Node4 StatusReceived:"+NodeMCU4_Status.state);
+		if ( NodeMCU4_Status.state != "Offline") {
+			var DateTimeType dateTime = new DateTimeType();
+			NodeMCU4_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
+		}
+		
+end
+
+rule Node3StatusReceived
+when
+	Item NodeMCU3_Status received update
+then
+		logDebug("HomeAutomation", "Node3 StatusReceived:"+NodeMCU3_Status.state);
+		if ( NodeMCU3_Status.state != "Offline") {
+			var DateTimeType dateTime = new DateTimeType();
+			NodeMCU3_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
+		}
+		
+end
+
+rule Node2StatusReceived
+when
+	Item NodeMCU2_Status received update
+then
+		logDebug("HomeAutomation", "Node2 StatusReceived:"+NodeMCU2_Status.state);
+		if ( NodeMCU2_Status.state != "Offline") {
+			var DateTimeType dateTime = new DateTimeType();
+			NodeMCU2_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
+		}
+		
+end
+
+rule Node1StatusReceived
+when
+	Item NodeMCU1_Status received update
+then
+		logDebug("HomeAutomation", "Node1 StatusReceived:"+NodeMCU1_Status.state);
+		if ( NodeMCU1_Status.state != "Offline") {
+			var DateTimeType dateTime = new DateTimeType();
+			NodeMCU1_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
+		}
+		
+end
+
+rule NodeReset
+when
+	Time cron "0 0 0/1 1/1 * ? *"
+then
+	
+	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU4/In/Switches -m 000=000"
+	executeCommandLine(sendMqttProbe);
+end

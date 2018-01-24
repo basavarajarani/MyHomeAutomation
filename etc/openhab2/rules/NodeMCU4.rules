@@ -205,3 +205,37 @@ then
 		
 	}
 end
+
+/*rule ProbeNodeStatus
+when
+	Time cron "0 0/1 * 1/1 * ? *"
+then
+	logDebug("HomeAutomation", "Sending Node Status Probe for NodeMCU4");
+
+	NodeMCU4_Status.postUpdate("Offline");
+	
+	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU4/In/Switches -m 100=100"
+	executeCommandLine(sendMqttProbe);
+end
+
+rule NodeStatusReceived
+when
+	Item NodeMCU4_Status received update
+then
+		logDebug("HomeAutomation", "Node4 StatusReceived:"+NodeMCU4_Status.state);
+		if ( NodeMCU4_Status.state != "Offline") {
+			var DateTimeType dateTime = new DateTimeType();
+			NodeMCU4_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
+		}
+		
+end
+*/
+
+rule NodeReset
+when
+	Time cron "0 0 0/1 1/1 * ? *"
+then
+	
+	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU4/In/Switches -m 000=000"
+	executeCommandLine(sendMqttProbe);
+end

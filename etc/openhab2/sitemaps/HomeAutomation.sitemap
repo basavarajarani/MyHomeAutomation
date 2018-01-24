@@ -8,6 +8,8 @@ sitemap HomeAutomation label="Home Automation" icon="house"
 		Text label="Front Garden (NM1)" icon="frontgarden" {
 			Switch item=NodeMCU1_Switch1 label="Main Valve" icon="faucet"
 			Switch item=NodeMCU1_Switch2 label="Lilly Pilly Bed" icon="garden"
+			Text item=NodeMCU1_Status label="Node Status" icon="status"
+			Text item=NodeMCU1_Last_Ping label="Last Ping Time" icon="status"
 			
 		}
 		Text label="Front Garden (NM2)" icon="frontgarden" {
@@ -26,6 +28,8 @@ sitemap HomeAutomation label="Home Automation" icon="house"
 			Switch item=NodeMCU4_Switch1 label="Sprinkler 1" icon="grass"
 			Switch item=NodeMCU4_Switch2 label="Sprinkler 2" icon="grass"
 			Switch item=NodeMCU4_Switch3 label="Sprinkler 3" icon="grass"
+			Text item=NodeMCU4_Status label="Node Status" icon="status"
+			Text item=NodeMCU4_Last_Ping label="Last Ping Time" icon="status"
 		}
 	}
 	

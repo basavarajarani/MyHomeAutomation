@@ -18,8 +18,6 @@ Number NodeMCU1_Switch2_Timer "Switch2 Timer  [%d]" <clock-on> (NodeMCU1_SwitchO
 Number NodeMCU1_Switch3_Timer "Switch3 Timer  [%d]" <clock-on> (NodeMCU1_SwitchOnTimings)
 Number NodeMCU1_Switch4_Timer "Switch4 Timer  [%d]" <clock-on> (NodeMCU1_SwitchOnTimings)
 
-String NodeMCU1_ProbeNodeStatus "[%s]" <rain> {mqtt=">[mosquitto:NodeMCU1/In/Switches:state:default]"}
 String NodeMCU1_Status "[%s]" <rain> {mqtt="<[mosquitto:NodeMCU1/Out/Status:state:default]"}
-//DateTime NodeMCU1_Last_Ping "[%1$tA, %1$td.%1$tm.%1$tY %1$tT]" <rain>
 
 String NodeMCU1_Last_Ping "[%s]" <rain>
