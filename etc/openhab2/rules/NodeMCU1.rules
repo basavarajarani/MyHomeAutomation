@@ -180,7 +180,7 @@ then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
-	if (rainToday <=0 && rainYesterday <=0 ) {
+	if (rainToday <=10 && rainYesterday <= 15 ) {
 		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch2,3);
 		
 	}
@@ -193,36 +193,103 @@ then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
-	if (rainToday <=0 && rainYesterday <=0 ) {
+	if (rainToday <=5 && rainYesterday <=15 ) {
 		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch2,3);
 		
 	}
 end
+
+/*****************************************************************************************
+* Lawn in front of the Letter Box
+* Node : Node MCU 1
+* Switch : Switch 3
+*****************************************************************************************/
 /*
-rule ProbeNodeStatus
+rule startFrontLawn1SeedsWateringOddHour
 when
-        Time cron "0 0/1 * 1/1 * ? *"
+	Time cron "0 40 7-21/4 * * ? *"
 then
-        logDebug("HomeAutomation", "Sending Node Status Probe for NodeMCU1");
-//        if (NodeMCU1_Status.state == "Offline") {
-                //sendBroadcastNotification("NodeMCU1 is Offline since "+NodeMCU1_Last_Ping.state);
- //       }
-        NodeMCU1_Status.postUpdate("Offline");
-   
-        var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU1/In/Switches -m 100=100"
-        executeCommandLine(sendMqttProbe);
-end     
-        
-rule NodeStatusReceived
-when    
-        Item NodeMCU1_Status received update
-then    
-                logDebug("HomeAutomation", "Node 1 StatusReceived:"+NodeMCU1_Status.state);
-                if ( NodeMCU1_Status.state != "Offline") {                      
-                        var DateTimeType dateTime = new DateTimeType();         
-                        NodeMCU1_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
-                }       
-                                                                                
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+	 	var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+		var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+	if (rainToday <=10) {
+		if (Current_Temp > 30) {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch3,2);
+			
+		}
+		else {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch3,1);
+		}
+		
+
+	}
 end
 
+rule startFrontLawn1SeedsWateringEvenHour
+when
+	Time cron "0 40 8-20/4 * * ? *"
+then
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+	 	var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+		var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+	if (rainToday <=10 ) {
+		if (Current_Temp > 27) {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch3,2);
+			
+		}
+		else if (Current_Temp > 23{
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch3,1);
+		}
+		
+
+	}
+end
 */
+
+/*********************************************************************************************/
+
+/*****************************************************************************************
+* Lawn in front of the Gum Tree Near the Letter Box
+* Node : Node MCU 1
+* Switch : Switch 4
+*****************************************************************************************/
+
+
+rule startFrontLawn2SeedsWateringOddHour
+when
+	Time cron "0 43 7-21/2 * * ? *"
+then
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+	 	var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+		var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+
+	if (rainToday <=10 ) {
+		if (Current_Temp > 27) {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch4,2);
+		}
+		else {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch4,1);
+		}
+		
+
+	}
+end
+
+rule startFrontLawn2SeedsWateringEvenHour
+when
+	Time cron "0 43 8-20/2 * * ? *"
+then
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+	 	var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+		var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
+
+	if (rainToday <=6 ) {
+		if (Current_Temp > 27) {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch4,2);
+		}else if (Current_Temp > 23) {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU1_Switch4,1);
+			
+		}
+
+	}
+end

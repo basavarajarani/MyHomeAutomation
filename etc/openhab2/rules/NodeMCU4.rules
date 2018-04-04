@@ -153,28 +153,21 @@ then
 end
 
 
-/*
-rule testRule
-when
-	Time cron "0/5 * * * * ?"
-then
-		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
-		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
-		
-		logDebug("HomeAutomation", "RainToday:"+rainToday+" rainYesterday:"+rainYesterday);
-end
-
-*/
-
 rule startFrontLawn1TapFor2Minutes
 when
-	Time cron "0 0 7,19 * * ?"
+	Time cron "0 48 7-21/2 * APR ? *"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+		var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType
 
-	if (rainToday <=0 && rainYesterday <=0 ) {
-		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch1,2);
+	if (rainToday <=10 ) {
+		if (Current_Temp > 26) {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch1,2);
+		}
+		else {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch1,1);
+		}
 		
 	}
 end
@@ -182,60 +175,44 @@ end
 
 rule startFrontLawn2TapFor2Minutes
 when
-	Time cron "10 2 7,19 * * ?"
+	Time cron "0 48 8-20/2 * APR ? *"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
-	if (rainToday <=0 && rainYesterday <=0) {
-		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch2,2);
+	if (rainToday <=5 ) {
+		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch2,1);
 		
 	}
 end
 
 rule startFrontLawn3TapFor2Minutes
 when
-	Time cron "20 4 7,19 * * ?"
+	Time cron "0 46 8-20/2 * APR ? *"
 then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
+		var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType;
 
-	if (rainToday <=0 && rainYesterday <=0) {
-		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch3,2);
+	if (rainToday <=10) {
+		if (Current_Temp > 26) {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch3,2);
+		}
+		else {
+			turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU4_Switch3,1);
+		}
 		
 	}
 end
 
-/*rule ProbeNodeStatus
-when
-	Time cron "0 0/1 * 1/1 * ? *"
+rule "Print Rain History"
+when 
+	Time cron "0 0/1 * * * ? *"
 then
-	logDebug("HomeAutomation", "Sending Node Status Probe for NodeMCU4");
-
-	NodeMCU4_Status.postUpdate("Offline");
+		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
+		var Number rainYesterday = Melbourne_Weather_Rain_In_MM.maximumSince(now.minusHours(48)).state as DecimalType
+		var Number Current_Temp = Melbourne_Weather_Current_Temp_In_Celcius.state as DecimalType;
+		logDebug("HomeAutomation","Rain Today:"+rainToday);
+		logDebug("HomeAutomation","Rain Yesterday:"+rainYesterday);
 	
-	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU4/In/Switches -m 100=100"
-	executeCommandLine(sendMqttProbe);
-end
-
-rule NodeStatusReceived
-when
-	Item NodeMCU4_Status received update
-then
-		logDebug("HomeAutomation", "Node4 StatusReceived:"+NodeMCU4_Status.state);
-		if ( NodeMCU4_Status.state != "Offline") {
-			var DateTimeType dateTime = new DateTimeType();
-			NodeMCU4_Last_Ping.postUpdate(dateTime.format("[%1$td %1$tm %1$tT]"));
-		}
-		
-end
-*/
-
-rule NodeReset
-when
-	Time cron "0 0 0/1 1/1 * ? *"
-then
-	
-	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU4/In/Switches -m 000=000"
-	executeCommandLine(sendMqttProbe);
 end

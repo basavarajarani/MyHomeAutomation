@@ -156,21 +156,21 @@ end
 
 rule startHangingPotTapFor20SecondsSummer
 when
-        Time cron "0 30 6,9,12,15,18 * DEC-MAR ?"
+        Time cron "0 30 6,9,12,15,18 * DEC-FEB ?"
 then
         turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
 end
 
 rule startHangingPotTapFor20SecondsAutumn
 when
-        Time cron "0 30 6,13,18 * APR-May ?"
+        Time cron "0 30 6,13,18 * MAR-MAY,SEP-NOV ?"
 then
         turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
 end
 
 rule startHangingPotTapFor20SecondsWinter
 when
-        Time cron "0 30 6,13,18 * JUN-AUG ?"
+        Time cron "0 30 6,18 * JUN-AUG ?"
 then
         turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
 end
@@ -195,7 +195,7 @@ then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
-	if (rainToday <=0 && rainYesterday <=0 ) {
+	if (rainToday <=5 ) {
 		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU2_Switch2,2);
 	}
 end
@@ -207,7 +207,7 @@ then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
-	if (rainToday <=0 && rainYesterday <=0 ) {
+	if (rainToday <=5 ) {
 		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU2_Switch3,2);
 		
 	}
@@ -220,7 +220,7 @@ then
 		var Number rainToday = Melbourne_Weather_Rain_In_MM.state as DecimalType;
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
-	if (rainToday <=0 && rainYesterday <=0 ) {
+	if (rainToday <=5 ) {
 		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU2_Switch3,2);
 		
 	}

@@ -1,15 +1,32 @@
-sitemap HomeAutomation label="Home Automation" icon="house"
+sitemap HomeAutomation label="6 Duffy Court" icon="house"
 {
-	Frame label="Weather Info" {
-		Group item=Temperature 
-		Group item=Rain 
+	Frame label="Control Info" {
+		Text label="Weather Info" icon="sun_clouds"{
+			Text item=Melbourne_Weather_Low_In_Celcius
+			Text item=Melbourne_Weather_High_In_Celcius
+			Text item=Melbourne_Weather_Current_Temp_In_Celcius
+			Text item=Melbourne_Weather_Rain_In_MM
+			Text item=Melbourne_Weather_POP
+			Text item=Melbourne_Weather_Current_Rain_In_MM
+		}
+		Text label="Node Status" icon="status"{
+			Text item=NodeMCU1_Status label="Node 1 Status" icon="status"
+			Text item=NodeMCU1_Last_Ping label="Node 1 Last Ping Time" icon="status"
+			Text item=NodeMCU2_Status label="Node 2 Status" icon="status"
+			Text item=NodeMCU2_Last_Ping label="Node 2 Last Ping Time" icon="status"
+			Text item=NodeMCU3_Status label="Node 3 Status" icon="status"
+			Text item=NodeMCU3_Last_Ping label="Node 3 Last Ping Time" icon="status"
+			Text item=NodeMCU4_Status label="Node 4 Status" icon="status"
+			Text item=NodeMCU4_Last_Ping label="Node 4 Last Ping Time" icon="status"
+		}
+	
 	}
 	Frame label="Garden Controller" {
 		Text label="Front Garden (NM1)" icon="frontgarden" {
 			Switch item=NodeMCU1_Switch1 label="Main Valve" icon="faucet"
 			Switch item=NodeMCU1_Switch2 label="Lilly Pilly Bed" icon="garden"
-			Text item=NodeMCU1_Status label="Node Status" icon="status"
-			Text item=NodeMCU1_Last_Ping label="Last Ping Time" icon="status"
+			Switch item=NodeMCU1_Switch3 label="Front New Lawn1" icon="grass"
+			Switch item=NodeMCU1_Switch4 label="Front New Lawn2" icon="grass"
 			
 		}
 		Text label="Front Garden (NM2)" icon="frontgarden" {
@@ -28,8 +45,6 @@ sitemap HomeAutomation label="Home Automation" icon="house"
 			Switch item=NodeMCU4_Switch1 label="Sprinkler 1" icon="grass"
 			Switch item=NodeMCU4_Switch2 label="Sprinkler 2" icon="grass"
 			Switch item=NodeMCU4_Switch3 label="Sprinkler 3" icon="grass"
-			Text item=NodeMCU4_Status label="Node Status" icon="status"
-			Text item=NodeMCU4_Last_Ping label="Last Ping Time" icon="status"
 		}
 	}
 	

@@ -6,7 +6,7 @@ val Procedures.Procedure2 <StringItem,String> probeNodeStatusProc = [
 
 	statusItem.postUpdate("Offline");
 
-	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t "+switchName+"/In/Switches -m 100=100"
+	var String sendMqttProbe = "mosquitto_pub -h 192.168.0.163 -t "+switchName+"/In/Switches -m 100=100"
         executeCommandLine(sendMqttProbe);
 ]
 
@@ -79,6 +79,6 @@ when
 	Time cron "0 0 0/1 1/1 * ? *"
 then
 	
-	var String sendMqttProbe = "mosquitto_pub -h 10.0.0.163 -t NodeMCU4/In/Switches -m 000=000"
+	var String sendMqttProbe = "mosquitto_pub -h 192.168.0.163 -t NodeMCU4/In/Switches -m 000=000"
 	executeCommandLine(sendMqttProbe);
 end

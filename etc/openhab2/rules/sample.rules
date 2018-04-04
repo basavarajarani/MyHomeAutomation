@@ -1,0 +1,8 @@
+
+rule NodeReset1
+when
+	Time cron "0/10 50-59/2 * 1/1 * ? *"
+then
+		logDebug("HomeAutomation", "Node101010 StatusReceived:"+NodeMCU1_Status.state);
+	
+end
