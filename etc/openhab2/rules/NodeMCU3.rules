@@ -155,11 +155,12 @@ then
 		var Number rainYesterday = Melbourne_Weather_Current_Rain_In_MM.historicState(now.minusDays(1)).state as DecimalType;
 
 //	if (rainToday <=0 && rainYesterday <=0 ) {
-		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU3_Switch1,4);
+		turnOnSwitchWithRunTimerInMinutes.apply(NodeMCU3_Switch1,2);
 		
 //	}
 end
 
+/*
 rule startTomatoBedFor30Seconds
 when
 	Time cron "0 30 9,11,12,14,15,16,17 * DEC-MAR ?"
@@ -171,4 +172,4 @@ then
 		
 //	}
 end
-
+*/

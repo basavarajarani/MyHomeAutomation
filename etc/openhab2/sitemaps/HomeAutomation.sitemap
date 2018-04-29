@@ -9,7 +9,7 @@ sitemap HomeAutomation label="6 Duffy Court" icon="house"
 			Text item=Melbourne_Weather_POP
 			Text item=Melbourne_Weather_Current_Rain_In_MM
 		}
-		Text label="Node Status" icon="status"{
+		Text label="Node Healthcheck" icon="status"{
 			Text item=NodeMCU1_Status label="Node 1 Status" icon="status"
 			Text item=NodeMCU1_Last_Ping label="Node 1 Last Ping Time" icon="status"
 			Text item=NodeMCU2_Status label="Node 2 Status" icon="status"
@@ -21,6 +21,16 @@ sitemap HomeAutomation label="6 Duffy Court" icon="house"
 		}
 	
 	}
+
+	Frame label="Sonoff 4Ch Pro 1" icon="grontgarden" {
+		Text label="Testing" icon="frontgarden" {
+			Switch item=Sonoff4CHPro1_Switch1 label="Main Valve1" icon="faucet"
+			Switch item=Sonoff4CHPro1_Switch2 label="Main Valve2" icon="faucet"
+			Switch item=Sonoff4CHPro1_Switch3 label="Main Valve3" icon="faucet"
+			Switch item=Sonoff4CHPro1_Switch4 label="Main Valve4" icon="faucet"
+		}
+	}
+
 	Frame label="Garden Controller" {
 		Text label="Front Garden (NM1)" icon="frontgarden" {
 			Switch item=NodeMCU1_Switch1 label="Main Valve" icon="faucet"

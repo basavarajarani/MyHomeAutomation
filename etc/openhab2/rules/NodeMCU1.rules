@@ -254,7 +254,7 @@ end
 * Switch : Switch 4
 *****************************************************************************************/
 
-
+/*
 rule startFrontLawn2SeedsWateringOddHour
 when
 	Time cron "0 43 7-21/2 * * ? *"
@@ -293,3 +293,4 @@ then
 
 	}
 end
+*/

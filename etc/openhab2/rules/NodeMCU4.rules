@@ -172,7 +172,7 @@ then
 	}
 end
 
-
+/*
 rule startFrontLawn2TapFor2Minutes
 when
 	Time cron "0 48 8-20/2 * APR ? *"
@@ -185,6 +185,7 @@ then
 		
 	}
 end
+*/
 
 rule startFrontLawn3TapFor2Minutes
 when

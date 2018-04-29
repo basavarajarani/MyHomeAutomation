@@ -1,0 +1,8 @@
+Group Sonoff4CHPro1
+
+Group Sonoff4CHPro1_Switches (Sonoff4CHPro1)
+
+Switch Sonoff4CHPro1_Switch1 <faucet> (Sonoff4CHPro1_Switches) {mqtt=">[mosquitto:cmnd/sonoff4chpro1/power1:command:off:0],>[mosquitto:cmnd/sonoff4chpro1/power1:command:on:1],<[mosquitto:stat/sonoff4chpro1/POWER1:state:default"]}
+Switch Sonoff4CHPro1_Switch2 <faucet> (Sonoff4CHPro1_Switches) {mqtt=">[mosquitto:cmnd/sonoff4chpro1/power2:command:off:0],>[mosquitto:cmnd/sonoff4chpro1/power2:command:on:1],<[mosquitto:stat/sonoff4chpro1/POWER2:state:default"]}
+Switch Sonoff4CHPro1_Switch3 <faucet> (Sonoff4CHPro1_Switches) {mqtt=">[mosquitto:cmnd/sonoff4chpro1/power3:command:off:0],>[mosquitto:cmnd/sonoff4chpro1/power3:command:on:1],<[mosquitto:stat/sonoff4chpro1/POWER3:state:default"]}
+Switch Sonoff4CHPro1_Switch4 <faucet> (Sonoff4CHPro1_Switches) {mqtt=">[mosquitto:cmnd/sonoff4chpro1/power4:command:off:0],>[mosquitto:cmnd/sonoff4chpro1/power4:command:on:1],<[mosquitto:stat/sonoff4chpro1/POWER4:state:default"]}

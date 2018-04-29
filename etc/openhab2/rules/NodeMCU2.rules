@@ -156,21 +156,14 @@ end
 
 rule startHangingPotTapFor20SecondsSummer
 when
-        Time cron "0 30 6,9,12,15,18 * DEC-FEB ?"
+        Time cron "0 30 6,9,12,15,18 * DEC-MAR ?"
 then
         turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
 end
 
 rule startHangingPotTapFor20SecondsAutumn
 when
-        Time cron "0 30 6,13,18 * MAR-MAY,SEP-NOV ?"
-then
-        turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
-end
-
-rule startHangingPotTapFor20SecondsWinter
-when
-        Time cron "0 30 6,18 * JUN-AUG ?"
+        Time cron "0 30 6,18 * APR-NOV ?"
 then
         turnOnSwitchWithRunTimerInSeconds.apply(NodeMCU2_Switch1,20);
 end
